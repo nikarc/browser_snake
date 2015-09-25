@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "gulp": "latest",
+    "gulp-babel": "latest",
+    "gulp-sass": "latest",
+    "gulp-sourcemaps": "^1.5.2"
+  }
+}
