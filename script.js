@@ -10,6 +10,7 @@ var stopButton = document.getElementById('stop');
 
 var intervalId = undefined;
 var gameSpeed = 1000;
+var ctx = playArea.getContext('2d');
 
 var Snake = (function () {
   function Snake() {
@@ -22,44 +23,66 @@ var Snake = (function () {
   }
 
   _createClass(Snake, [{
-    key: 'place',
-    value: function place() {
+    key: 'draw',
+    value: function draw() {
       var _this = this;
 
-      if (playArea.getContext) {
-        (function () {
-          var ctx = playArea.getContext('2d');
-
-          _this.body.forEach(function (sq) {
-            ctx.fillRect(sq.x, sq.y, _this.size, _this.size);
-          });
-        })();
-      }
+      ctx.clearRect(0, 0, playArea.width, playArea.height);
+      this.body.forEach(function (sq) {
+        ctx.fillRect(sq.x, sq.y, _this.size, _this.size);
+      });
     }
   }, {
     key: 'move',
     value: function move() {
-      var head = this.body[0];
-      var tail = this.body.pop();
+      var s = this.size;
 
-      switch (this.currentDir) {
-        case 'up':
-          tail.y = head.y + 1;
-          tail.x = head.x;
-          break;
-        case 'right':
-          tail.x = head.x + 1;
-          tail.y = head.y;
-          break;
-        case 'down':
-          tail.y = head.y - 1;
-          tail.x = head.x;
-          break;
-        case 'left':
-          tail.x = head.x - 1;
-          tail.y = head.y;
-          break;
+      if (this.body.length > 1) {
+        var head = this.pop[0];
+        var tail = this.body.pop();
+
+        switch (this.currentDir) {
+          case 'up':
+            tail.y = head.y + s;
+            tail.x = head.x;
+            break;
+          case 'right':
+            tail.x = head.x + s;
+            tail.y = head.y;
+            break;
+          case 'down':
+            tail.y = head.y - s;
+            tail.x = head.x;
+            break;
+          case 'left':
+            tail.x = head.x - s;
+            tail.y = head.y;
+            break;
+        }
+
+        this.body.unshift(tail);
+      } else {
+        var head = this.body.pop();
+
+        switch (this.currentDir) {
+          case 'up':
+            head.y = head.y + s;
+            break;
+          case 'right':
+            head.x = head.x + s;
+            break;
+          case 'down':
+            head.y = head.y - s;
+            break;
+          case 'left':
+            head.x = head.x - s;
+            break;
+        }
+
+        this.body.unshift(head);
       }
+
+      this.draw();
     }
   }]);
 
@@ -68,10 +91,10 @@ var Snake = (function () {
 
 var Player = new Snake();
 
-Player.place();
+Player.draw();
 
 function gameLoop() {
-  console.log('loop');
+  Player.move();
 }
 
 startButton.addEventListener('click', function (e) {
