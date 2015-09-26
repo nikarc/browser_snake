@@ -5,19 +5,28 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var playArea = document.getElementById('playArea');
+var appleArea = document.getElementById('appleArea');
 var startButton = document.getElementById('start');
 var stopButton = document.getElementById('stop');
 
 var intervalId = undefined;
-var gameSpeed = 1000;
-var ctx = playArea.getContext('2d');
+var gameSpeed = 500;
+var playCtx = playArea.getContext('2d');
+var appleCtx = appleArea.getContext('2d');
+var gridSize = 10;
+
+appleCtx.fillStyle = 'red';
+
+function createRand(area) {
+  return { x: Math.floor(Math.random() * (area.width - 0)) + 0, y: Math.floor(Math.random() * (area.width - 0)) + 0 };
+}
 
 var Snake = (function () {
   function Snake() {
     _classCallCheck(this, Snake);
 
     this.body = [{ x: playArea.width / 2, y: playArea.height / 2 }];
-    this.size = 10;
+    this.size = gridSize;
     this.directions = ['up', 'right', 'down', 'left'];
     this.currentDir = 'right';
   }
@@ -27,9 +36,10 @@ var Snake = (function () {
     value: function draw() {
       var _this = this;
 
-      ctx.clearRect(0, 0, playArea.width, playArea.height);
+      playCtx.clearRect(0, 0, playArea.width, playArea.height);
+      playCtx.fillStyle = 'black';
       this.body.forEach(function (sq) {
-        ctx.fillRect(sq.x, sq.y, _this.size, _this.size);
+        playCtx.fillRect(sq.x, sq.y, _this.size, _this.size);
       });
     }
   }, {
@@ -89,12 +99,38 @@ var Snake = (function () {
   return Snake;
 })();
 
-var Player = new Snake();
+var Apple = (function () {
+  function Apple() {
+    _classCallCheck(this, Apple);
 
-Player.draw();
+    this.pos = createRand(appleArea);
+    this.size = gridSize;
+  }
+
+  _createClass(Apple, [{
+    key: 'place',
+    value: function place() {
+      appleCtx.fillRect(this.pos.x, this.pos.y, this.size, this.size);
+    }
+  }, {
+    key: 'move',
+    value: function move() {
+      this.pos = createRand(appleArea);
+      this.place();
+    }
+  }]);
+
+  return Apple;
+})();
+
+var player = new Snake();
+var apple = new Apple();
+
+player.draw();
+apple.place();
 
 function gameLoop() {
-  Player.move();
+  player.move();
 }
 
 startButton.addEventListener('click', function (e) {

@@ -1,22 +1,32 @@
 const playArea = document.getElementById('playArea');
+const appleArea = document.getElementById('appleArea');
 const startButton = document.getElementById('start');
 const stopButton = document.getElementById('stop');
 
 let intervalId;
-let gameSpeed = 1000;
-let ctx = playArea.getContext('2d');
+let gameSpeed = 500;
+let playCtx = playArea.getContext('2d');
+let appleCtx = appleArea.getContext('2d');
+let gridSize = 10;
+
+appleCtx.fillStyle = 'red';
+
+function createRand(area) {
+  return { x: Math.floor(Math.random() * (area.width - 0)) + 0, y: Math.floor(Math.random() * (area.width - 0)) + 0 };
+}
 
 class Snake {
   constructor() {
     this.body = [{ x: (playArea.width / 2), y: (playArea.height / 2) }];
-    this.size = 10;
+    this.size = gridSize;
     this.directions = ['up', 'right', 'down', 'left'];
     this.currentDir = 'right';
   }
   draw() {
-    ctx.clearRect(0,0,playArea.width, playArea.height);
+    playCtx.clearRect(0,0,playArea.width, playArea.height);
+    playCtx.fillStyle = 'black';
     this.body.forEach((sq) => {
-      ctx.fillRect(sq.x, sq.y, this.size, this.size);
+      playCtx.fillRect(sq.x, sq.y, this.size, this.size);
     });
   }
   move() {
@@ -71,12 +81,28 @@ class Snake {
   }
 }
 
-const Player = new Snake();
+class Apple {
+  constructor() {
+    this.pos = createRand(appleArea);
+    this.size = gridSize;
+  }
+  place() {
+    appleCtx.fillRect(this.pos.x, this.pos.y, this.size, this.size);
+  }
+  move() {
+    this.pos = createRand(appleArea);
+    this.place();
+  }
+}
 
-Player.draw();
+const player = new Snake();
+const apple = new Apple();
+
+player.draw();
+apple.place();
 
 function gameLoop() {
-  Player.move();
+  player.move();
 }
 
 startButton.addEventListener('click', function (e) {

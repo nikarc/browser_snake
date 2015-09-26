@@ -21,9 +21,32 @@ body {
   height: 100%;
 }
 
+#canvas-wrap {
+  position: relative;
+  height: 500px;
+  width: 500px;
+}
+
 canvas {
-  background-color: white;
+  position: absolute;
+  top: 0;
+  left: 0;
   margin-bottom: 25px;
+  
+  &:nth-child(1) {
+    z-index: 1;
+    background-color: white;
+  }
+  
+  &:nth-child(2) {
+    z-index: 2;
+  }
+}
+
+#buttons {
+  position: absolute;
+  top: 10px;
+  left: -75px;
 }
 
 button {
@@ -31,4 +54,8 @@ button {
   margin-bottom: 10px;
 }
 
-
+.clearfix::after {
+  content: '';
+  display: table;
+  clear: both;
+}
