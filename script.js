@@ -54,53 +54,70 @@ var Snake = (function () {
   }, {
     key: 'move',
     value: function move() {
+      var _this2 = this;
+
       var s = this.size;
 
       if (this.body.length > 1) {
-        var head = this.body[0];
-        var tail = this.body.pop();
+        (function () {
+          var head = _this2.body[0];
+          var tail = _this2.body.pop();
 
-        switch (this.direction) {
-          case 'up':
-            tail.y = head.y - s;
-            tail.x = head.x;
-            break;
-          case 'right':
-            tail.x = head.x + s;
-            tail.y = head.y;
-            break;
-          case 'down':
-            tail.y = head.y + s;
-            tail.x = head.x;
-            break;
-          case 'left':
-            tail.x = head.x - s;
-            tail.y = head.y;
-            break;
-        }
+          switch (_this2.direction) {
+            case 'up':
+              tail.y = head.y - s;
+              tail.x = head.x;
+              break;
+            case 'right':
+              tail.x = head.x + s;
+              tail.y = head.y;
+              break;
+            case 'down':
+              tail.y = head.y + s;
+              tail.x = head.x;
+              break;
+            case 'left':
+              tail.x = head.x - s;
+              tail.y = head.y;
+              break;
+          }
 
-        this.body.unshift(tail);
+          _this2.body.forEach(function (sq) {
+            if (sq.x === tail.x && sq.y === tail.y) {
+              _this2.die();
+            }
+          });
+
+          _this2.body.unshift(tail);
+        })();
       } else {
-        var head = this.body.pop();
+        (function () {
+          var head = _this2.body.pop();
 
-        switch (this.direction) {
-          case 'up':
-            head.y = head.y - s;
-            break;
-          case 'right':
-            head.x = head.x + s;
-            break;
-          case 'down':
-            head.y = head.y + s;
-            break;
-          case 'left':
-            head.x = head.x - s;
-            break;
-        }
+          switch (_this2.direction) {
+            case 'up':
+              head.y = head.y - s;
+              break;
+            case 'right':
+              head.x = head.x + s;
+              break;
+            case 'down':
+              head.y = head.y + s;
+              break;
+            case 'left':
+              head.x = head.x - s;
+              break;
+          }
 
-        this.body.unshift(head);
+          _this2.body.forEach(function (sq) {
+            if (sq.x === head.x && sq.y === head.y) {
+              _this2.die();
+            }
+          });
+
+          _this2.body.unshift(head);
+        })();
       }
-
       this.draw();
     }
   }, {

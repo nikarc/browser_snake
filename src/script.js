@@ -64,6 +64,12 @@ class Snake {
           break;
         }
         
+        this.body.forEach((sq) => {
+          if (sq.x === tail.x && sq.y === tail.y) {
+            this.die();
+          }
+        });
+        
         this.body.unshift(tail);
       } else {
         let head = this.body.pop();
@@ -83,9 +89,14 @@ class Snake {
             break;
         }
         
+        this.body.forEach((sq) => {
+          if (sq.x === head.x && sq.y === head.y) {
+            this.die();
+          }
+        });
+        
         this.body.unshift(head);
     }
-    
     this.draw();
   }
   eat() {
