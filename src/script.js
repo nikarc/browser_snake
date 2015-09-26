@@ -158,19 +158,27 @@ document.addEventListener('keydown', function (e) {
   switch (key) {
     case 38:
       case 87:
-        player.direction = 'up';
+        if (player.direction !== 'down') {
+          player.direction = 'up';
+        }
         break;
     case 39:
       case 68:
-        player.direction = 'right';
+        if (player.direction !== 'left') {
+          player.direction = 'right';
+        }
         break;
     case 40:
       case 83:
-        player.direction = 'down';
+        if (player.direction !== 'up') {
+          player.direction = 'down';
+        }
         break;
     case 37:
       case 65:
-        player.direction = 'left';
+        if (player.direction !== 'right') {
+          player.direction = 'left';
+        }
         break;
   }
 });
