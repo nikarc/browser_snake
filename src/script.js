@@ -140,7 +140,6 @@ class Apple {
     this.pos = createRand(appleArea);
     appleCtx.clearRect(0,0,playArea.width, playArea.height);
     this.place();
-    gameSpeed = gameSpeed * 2;
   }
 }
 
