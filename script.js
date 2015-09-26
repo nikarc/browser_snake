@@ -8,17 +8,19 @@ var playArea = document.getElementById('playArea');
 var appleArea = document.getElementById('appleArea');
 var startButton = document.getElementById('start');
 var stopButton = document.getElementById('stop');
+var body = Array.from(document.getElementsByTagName('body'));
 
 var intervalId = undefined;
-var gameSpeed = 500;
+var gameSpeed = 100;
 var playCtx = playArea.getContext('2d');
 var appleCtx = appleArea.getContext('2d');
 var gridSize = 10;
+var restartButton = undefined;
 
 appleCtx.fillStyle = 'red';
 
 function createRand(area) {
-  var num = { x: Math.round((Math.random() * (area.width - 0) + 0) / 10) * 10, y: Math.round((Math.random() * (area.width - 0) + 0) / 10) * 10 };
+  var num = { x: Math.round((Math.random() * (area.width - 10) + 0) / 10) * 10, y: Math.round((Math.random() * (area.width - 10) + 0) / 10) * 10 };
   console.log(num);
   return num;
 }
@@ -39,6 +41,9 @@ var Snake = (function () {
 
       if (this.body[0].x === apple.pos.x && this.body[0].y === apple.pos.y) {
         this.eat();
+      }
+      if (this.body[0].x > playArea.width || this.body[0].x < 0 || this.body[0].y > playArea.height || this.body[0].y < 0) {
+        this.die();
       }
       playCtx.clearRect(0, 0, playArea.width, playArea.height);
       playCtx.fillStyle = 'black';
@@ -104,6 +109,31 @@ var Snake = (function () {
       this.body.push({ x: apple.pos.x, y: apple.pos.y });
       apple.move();
     }
+  }, {
+    key: 'die',
+    value: function die() {
+      window.clearInterval(intervalId);
+
+      var overlay = document.createElement('div');
+      overlay.id = 'overlay';
+
+      var p = document.createElement('p');
+      p.innerHTML = 'You Died!';
+
+      var button = document.createElement('button');
+      button.id = 'restart';
+      button.innerHTML = 'retry';
+
+      overlay.appendChild(p);
+      overlay.appendChild(button);
+      body[0].appendChild(overlay);
+
+      restartButton = document.getElementById('restart');
+
+      restartButton.addEventListener('click', function (e) {
+        location.reload();
+      });
+    }
   }]);
 
   return Snake;
@@ -128,6 +158,7 @@ var Apple = (function () {
       this.pos = createRand(appleArea);
       appleCtx.clearRect(0, 0, playArea.width, playArea.height);
       this.place();
+      gameSpeed = gameSpeed * 2;
     }
   }]);
 

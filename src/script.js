@@ -2,17 +2,19 @@ const playArea = document.getElementById('playArea');
 const appleArea = document.getElementById('appleArea');
 const startButton = document.getElementById('start');
 const stopButton = document.getElementById('stop');
+const body = Array.from(document.getElementsByTagName('body'));
 
 let intervalId;
-let gameSpeed = 500;
+let gameSpeed = 100;
 let playCtx = playArea.getContext('2d');
 let appleCtx = appleArea.getContext('2d');
 let gridSize = 10;
+let restartButton;
 
 appleCtx.fillStyle = 'red';
 
 function createRand(area) {
-  let num = { x: Math.round(((Math.random() * (area.width - 0)) + 0) / 10) * 10, y: Math.round(((Math.random() * (area.width - 0)) + 0) / 10) * 10 };
+  let num = { x: Math.round(((Math.random() * (area.width - 10)) + 0) / 10) * 10, y: Math.round(((Math.random() * (area.width - 10)) + 0) / 10) * 10 };
   console.log(num);
   return num;
 }
@@ -26,6 +28,9 @@ class Snake {
   draw() {
     if ((this.body[0].x === apple.pos.x) && (this.body[0].y === apple.pos.y)) {
       this.eat();
+    }
+    if (this.body[0].x > playArea.width || this.body[0].x < 0 || this.body[0].y > playArea.height || this.body[0].y < 0) {
+      this.die();
     }
     playCtx.clearRect(0,0,playArea.width, playArea.height);
     playCtx.fillStyle = 'black';
@@ -87,6 +92,29 @@ class Snake {
     this.body.push({ x: apple.pos.x, y: apple.pos.y  });
     apple.move();
   }
+  die() {
+    window.clearInterval(intervalId);
+    
+    let overlay = document.createElement('div');
+    overlay.id = 'overlay';
+    
+    let p = document.createElement('p');
+    p.innerHTML = 'You Died!';
+    
+    let button = document.createElement('button');
+    button.id = 'restart';
+    button.innerHTML = 'retry';
+    
+    overlay.appendChild(p);
+    overlay.appendChild(button);
+    body[0].appendChild(overlay);
+    
+    restartButton = document.getElementById('restart');
+    
+    restartButton.addEventListener('click', function (e) {
+      location.reload();
+    });
+  }
 }
 
 class Apple {
@@ -101,6 +129,7 @@ class Apple {
     this.pos = createRand(appleArea);
     appleCtx.clearRect(0,0,playArea.width, playArea.height);
     this.place();
+    gameSpeed = gameSpeed * 2;
   }
 }
 
