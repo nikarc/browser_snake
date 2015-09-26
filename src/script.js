@@ -12,16 +12,21 @@ let gridSize = 10;
 appleCtx.fillStyle = 'red';
 
 function createRand(area) {
-  return { x: Math.floor(Math.random() * (area.width - 0)) + 0, y: Math.floor(Math.random() * (area.width - 0)) + 0 };
+  let num = { x: Math.round(((Math.random() * (area.width - 0)) + 0) / 10) * 10, y: Math.round(((Math.random() * (area.width - 0)) + 0) / 10) * 10 };
+  console.log(num);
+  return num;
 }
 
 class Snake {
   constructor() {
-    this.body = [{ x: (playArea.width / 2), y: (playArea.height / 2) }];
+    this.body = [{ x: Math.floor(playArea.width / 2), y: Math.floor(playArea.height / 2) }];
     this.size = gridSize;
     this.direction = 'right';
   }
   draw() {
+    if ((this.body[0].x === apple.pos.x) && (this.body[0].y === apple.pos.y)) {
+      this.eat();
+    }
     playCtx.clearRect(0,0,playArea.width, playArea.height);
     playCtx.fillStyle = 'black';
     this.body.forEach((sq) => {
@@ -32,7 +37,7 @@ class Snake {
     let s = this.size;
     
     if (this.body.length > 1) {
-      let head = this.pop[0];
+      let head = this.body[0];
       let tail = this.body.pop();
     
       switch (this.direction) {
@@ -78,6 +83,10 @@ class Snake {
     
     this.draw();
   }
+  eat() {
+    this.body.push({ x: apple.pos.x, y: apple.pos.y  });
+    apple.move();
+  }
 }
 
 class Apple {
@@ -90,6 +99,7 @@ class Apple {
   }
   move() {
     this.pos = createRand(appleArea);
+    appleCtx.clearRect(0,0,playArea.width, playArea.height);
     this.place();
   }
 }
