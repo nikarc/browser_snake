@@ -21,7 +21,6 @@ appleCtx.fillStyle = 'red';
 
 function createRand(area) {
   var num = { x: Math.round((Math.random() * (area.width - 10) + 0) / 10) * 10, y: Math.round((Math.random() * (area.width - 10) + 0) / 10) * 10 };
-  console.log(num);
   return num;
 }
 
