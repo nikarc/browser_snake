@@ -19,8 +19,7 @@ class Snake {
   constructor() {
     this.body = [{ x: (playArea.width / 2), y: (playArea.height / 2) }];
     this.size = gridSize;
-    this.directions = ['up', 'right', 'down', 'left'];
-    this.currentDir = 'right';
+    this.direction = 'right';
   }
   draw() {
     playCtx.clearRect(0,0,playArea.width, playArea.height);
@@ -36,9 +35,9 @@ class Snake {
       let head = this.pop[0];
       let tail = this.body.pop();
     
-      switch (this.currentDir) {
+      switch (this.direction) {
         case 'up':
-          tail.y = (head.y + s);
+          tail.y = (head.y - s);
           tail.x = head.x;
           break;
         case 'right':
@@ -46,7 +45,7 @@ class Snake {
           tail.y = head.y;
           break;
         case 'down':
-          tail.y = (head.y - s);
+          tail.y = (head.y + s);
           tail.x = head.x;
           break;
         case 'left':
@@ -59,15 +58,15 @@ class Snake {
       } else {
         let head = this.body.pop();
         
-        switch (this.currentDir) {
+        switch (this.direction) {
           case 'up':
-            head.y = head.y + s;
+            head.y = head.y - s;
             break;
           case 'right':
             head.x = head.x + s;
             break;
           case 'down':
-            head.y = head.y - s;
+            head.y = head.y + s;
             break;
           case 'left':
             head.x = head.x - s;
@@ -111,7 +110,36 @@ startButton.addEventListener('click', function (e) {
 
 stopButton.addEventListener('click', function (e) {
   window.clearInterval(intervalId);
-  console.log('Stop');
 });
+
+
+document.addEventListener('keydown', function (e) {
+  let key = e.which;
+  
+  switch (key) {
+    case 38:
+      case 87:
+        player.direction = 'up';
+        break;
+    case 39:
+      case 68:
+        player.direction = 'right';
+        break;
+    case 40:
+      case 83:
+        player.direction = 'down';
+        break;
+    case 37:
+      case 65:
+        player.direction = 'left';
+        break;
+  }
+});
+
+
+
+
+
+
 
 
